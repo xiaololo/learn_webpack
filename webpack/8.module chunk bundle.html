@@ -1,0 +1,67 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>webpack</title>
+</head>
+
+<body>
+
+  ## 讲解范围
+  基本配置 ***
+  -> 高级配置 ***
+  优化打包效率
+  优化产出代码
+  构建流程概述
+  babel ***
+
+
+  -------高级配置------
+  多入口 参考文件【build-multi-entry】
+  抽离CSS文件 压缩 参考文件【build-min-extract-css】
+  *** 抽离公共代码和第三方模块  参考文件【build-min-extract-css】
+  懒加载 
+  处理 JSX - 修改.babelrc "presets": ["@babel/preset-react"],
+  处理 vue 
+
+  考点：
+  抽离公共代码 怎么做
+  懒加载 怎么做
+
+  ------- ------
+  module chunk bundle区别
+
+
+  <script>
+    // ------- module chunk bundle区别 ------
+    // module - 各个源码文件，webpack中一切皆模块
+    // chunk - 多模块合并成的，如 entry import() splitChunks
+    chunk使用：
+    定义生成chunk 
+   entry: {
+        index: path.join(srcPath, 'index.js'),
+        other: path.join(srcPath, 'other.js')
+    },
+    import('./***/djdj.js').then(res=>{
+      console.log(res.data)
+    })
+
+    splitChunks 代码分割部分
+
+    引用chunk
+    HtmlWebpackPlugin
+
+    // bundle -最终输出文件
+    见图片
+
+
+    
+
+
+  </script>
+
+</body>
+
+</html>

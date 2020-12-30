@@ -1,0 +1,194 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>webpack</title>
+</head>
+
+<body>
+
+  ## 讲解范围
+  基本配置 ***
+  高级配置 ***
+  -> 优化构建效率 ***** 必考
+  优化产出代码 ***** 必考
+  构建流程概述
+  babel ***
+
+
+  ------- 高级配置 ------
+  多入口 参考文件【build-multi-entry】
+  抽离CSS文件 压缩 参考文件【build-min-extract-css】
+  *** 抽离公共代码和第三方模块  参考文件【build-min-extract-css】
+  懒加载
+  处理 JSX - 修改.babelrc "presets": ["@babel/preset-react"],
+  处理 vue
+
+  ------- 概念 ------
+  module chunk bundle区别
+
+  ------- webpack性能优化 ------
+
+  优化打包构建速度 - 开发体验和效率 （理解分析）
+  优化 babel-loader
+  IgnorePlugin //避免插件
+  noParse //不去管哪些
+  happyPack //多进程打包工具
+  ParalleUglifyPlugin //多进程打包压缩
+  自动刷新
+  热更新
+  DLLPlugin
+
+  优化产出代码 - 产品性能
+  小图片base64编码
+  bundle加hash
+  懒加载 import
+  提取公共代码
+  IgnorePlugin
+  使用CDN加速
+  使用production
+  Scope Hosting 改变打包的作用域
+
+
+
+
+
+
+
+  考点：
+  抽离公共代码 怎么做
+  懒加载 怎么做
+  <script>
+    // ------- webpack性能优化-产出代码 ------
+    优点：
+    体积更小
+    合理分包，不重复加载
+    速度更快，内存使用更少
+
+    ## 小图片base64编码（减少请求）
+
+    生产环境rule中配置
+    {
+        test: /\.(png|jpg|jpeg|gif)$/,
+        use: {
+          loader: 'url-loader',
+          options: {
+            // 小于 5kb 的图片用 base64 格式产出
+            // 否则，依然延用 file-loader 的形式，产出 url 格式
+            limit: 5 * 1024,
+
+            // 打包到 img 目录下
+            outputPath: '/img1/',
+
+            // 设置图片的 cdn 地址（也可以统一在外面的 output 中设置，那将作用于所有静态资源）
+            // publicPath: 'http://cdn.abc.com'
+          }
+        }
+      },
+
+      ## bundle加hash
+      output: {
+      // filename: 'bundle.[contentHash:8].js', // 打包代码时，加上 hash 戳
+      filename: '[name].[contentHash:8].js', // name 即多入口时 entry 的 key
+      path: distPath,
+      // publicPath: 'http://cdn.abc.com' // 修改所有静态文件 url 的前缀（如 cdn 域名），这里暂时用不到
+      },
+    
+        
+      ## 使用CDN加速
+      1、修改所有静态文件 url 的前缀（如 cdn 域名）
+      output: {
+      filename: 'bundle.[contentHash:8].js', // 打包代码时，加上 hash 戳
+      // filename: '[name].[contentHash:8].js', // name 即多入口时 entry 的 key
+      path: distPath,
+      publicPath: 'http://cdn.abc.com' // 修改所有静态文件 url 的前缀（如 cdn 域名），这里暂时用不到
+      },
+     设置图片的 cdn 地址
+      {
+        test: /\.(png|jpg|jpeg|gif)$/,
+        use: {
+          loader: 'url-loader',
+          options: {
+            // 小于 5kb 的图片用 base64 格式产出
+            // 否则，依然延用 file-loader 的形式，产出 url 格式
+            limit: 5 * 1024,
+
+            // 打包到 img 目录下
+            outputPath: '/img1/',
+
+            // 设置图片的 cdn 地址（也可以统一在外面的 output 中设置，那将作用于所有静态资源）
+            publicPath: 'http://cdn.abc.com'
+          }
+        }
+      },
+
+      2、将html中的js文件和css文件上传到cdn上去
+
+      
+      ## 使用production
+      配置：
+      mode: 'production', //webpack4.0+
+
+      * 1.自动开启代码压缩
+      * 2.Vue、React 等会自动删除调试代码（如开发环境的warning）
+      * 3.启动 Tree-Shaking
+      
+
+      Tree-Shaking [ https://juejin.cn/post/6844903544756109319]
+      通常用于描述移除 JavaScript 上下文中的未引用代码,
+      它依赖于 ES2015 模块系统中的静态结构特性，例如 import 和 export。
+
+      //ES6 Module 才能让tree-shaking生效；commonjs 就不行
+      ES6 Module 和 Commonjs (Node )区别 ****常考
+      ES6 Module 静态引入，编译时引入
+      Commonjs 动态引入，执行时引入
+      只有 ES6 Module 才能静态分析，实现Tree-Shaking
+
+      Commonjs
+
+      let api=require('../config/api.js')
+      if (isDev) {
+        // 可以动态引入，执行时引入
+        api=require('../config/api_dev.js')
+      }
+
+      import api from '../config/api.js'
+      if (isDev) {
+        // 编译时报错，只能静态引入
+        import api from '../config/api_dev.js'
+      }
+
+
+      ### Scope Hosting  --作用域提升--看完视频
+
+
+      https://juejin.cn/post/6844903951846883335
+
+
+
+
+      
+      
+      
+      总结：
+      webpack优化构建速度
+      ###  可用于生产环境
+      优化 babel-loader 缓存（开发）、明确范围
+      IgnorePlugin // 避免插件
+      noParse // 不去管哪些
+      happyPack // 多进程打包工具
+      ParalleUglifyPlugin // 多进程打包压缩
+
+      ### 不可用于生产环境
+      自动刷新
+      热更新
+      DLLPlugin（开发）
+
+
+  </script>
+
+</body>
+
+</html>

@@ -1,0 +1,107 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>webpack</title>
+</head>
+
+<body>
+
+  ## 讲解范围
+  基本配置 ***
+  -> 高级配置 ***
+  优化打包效率
+  优化产出代码
+  构建流程概述
+  babel ***
+
+
+  -------高级配置------
+  多入口 参考文件【build-multi-entry】
+  抽离CSS文件 压缩 参考文件【build-min-extract-css】
+  抽离公共代码和第三方模块  参考文件【build-min-extract-css】
+  懒加载  
+
+
+
+
+  <script>
+    // ------- 抽离公共代码 ------
+    // 第三方模块单独打包
+    
+    // 配置[webpack.common.js]  配置入口
+    // 配置多入口 每个入口的chunks
+    plugins: [
+        // 多入口 - 生成 index.html
+        new HtmlWebpackPlugin({
+            template: path.join(srcPath, 'index.html'),
+            filename: 'index.html',
+            // chunks 表示该页面要引用哪些 chunk （即上面的 index 和 other），默认全部引用
+            chunks: ['index', 'vendor', 'common']  // 要考虑代码分割
+        }),
+        // 多入口 - 生成 other.html
+        new HtmlWebpackPlugin({
+            template: path.join(srcPath, 'other.html'),
+            filename: 'other.html',
+            chunks: ['other', 'common']  // 考虑代码分割
+        })
+    ]
+
+    配置生产环境 [webpack.prod.js]
+    //分割代码块
+    optimization: {
+    // 分割代码块
+    splitChunks: {
+      chunks: 'all',
+      /**
+       * initial 入口 chunk，对于异步导入的文件不处理
+          async 异步 chunk，只对异步导入的文件处理
+          all 全部 chunk
+       */
+
+      // 缓存分组
+      cacheGroups: {
+        // 第三方模块
+        vendor: {
+          name: 'vendor', // chunk 名称
+          priority: 1, // 权限更高，优先抽离，重要！！！
+          test: /node_modules/, // 模块的路径
+          minSize: 0, // 大小限制
+          minChunks: 1 // 最少复用过几次，只要命中一次，就把他作为单独的模块
+        },
+        // 公共的模块
+        common: {
+          name: 'common', // chunk 名称
+          priority: 0, // 优先级
+          minSize: 0, // 公共模块的大小限制
+          minChunks: 2 // 公共模块最少复用过几次，引用两次及以上，把公共模块拆分
+        }
+      }
+    }
+  }
+
+  // 运行npm run build后，
+  // dist文件的index.html引入文件 新增了vendor.js common.js index.js
+  // other.html引入文件 新增了 common.js other.js
+
+
+  chunk使用：
+    生成chunk 
+   entry: {
+        index: path.join(srcPath, 'index.js'),
+        other: path.join(srcPath, 'other.js')
+    },
+
+    splitChunks 代码分割部分
+
+    引用chunk
+    HtmlWebpackPlugin
+
+
+  </script>
+
+</body>
+
+</html>

@@ -1,0 +1,139 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>webpack</title>
+</head>
+
+<body>
+
+  ## 讲解范围
+  基本配置 ***
+  高级配置 ***
+  优化构建效率 ***** 必考
+  优化产出代码 ***** 必考
+  构建流程概述
+  -> babel ***
+
+
+  ------- 高级配置 ------
+  多入口 参考文件【build-multi-entry】
+  抽离CSS文件 压缩 参考文件【build-min-extract-css】
+  *** 抽离公共代码和第三方模块  参考文件【build-min-extract-css】
+  懒加载
+  处理 JSX - 修改.babelrc "presets": ["@babel/preset-react"],
+  处理 vue
+
+  ------- 概念 ------
+  module chunk bundle区别
+
+  ------- webpack性能优化 ------
+
+  优化打包构建速度 - 开发体验和效率 （理解分析）
+  优化 babel-loader
+  IgnorePlugin //避免插件
+  noParse //不去管哪些
+  happyPack //多进程打包工具
+  ParalleUglifyPlugin //多进程打包压缩
+  自动刷新
+  热更新
+  DLLPlugin
+
+  优化产出代码 - 产品性能
+  小图片base64编码
+  bundle加hash
+  懒加载 import
+  提取公共代码
+  IgnorePlugin
+  使用CDN加速
+  使用production
+  Scope Hosting 改变打包的作用域
+
+
+  ------- babel ------
+  解析ES6，甚至比ES6更高级的语法，到ES5或ES4级别，满足浏览器的兼容性
+  同 webpack 了解基本的配置和使用，必会
+
+  环境搭建 & 基本配置
+  babel-polyfill
+  babel-runtime
+
+  语法转换
+  通过 Polyfill 方式在目标环境中添加缺失的特性 (通过 @babel/polyfill 模块)
+  源码转换 (codemods)
+
+  <script>
+    // ------------环境搭建 & 基本配置------------
+    ## 环境搭建
+    package.json配置： "devDependencies": {
+        "@babel/cli": "^7.7.5",
+        "@babel/core": "^7.7.5",
+        "@babel/plugin-transform-runtime": "^7.7.5",
+        "@babel/preset-env": "^7.7.5"
+      },
+      "dependencies": {
+        "@babel/polyfill": "^7.7.0",
+        "@babel/runtime": "^7.7.5"
+      }
+
+
+      ##.babelrc配置 「presets 和 plugins」
+
+      preset 可以作为 Babel 插件的组合，甚至可以作为可以共享的 options 配置。
+
+      "@babel/preset-env", // preset-env是一堆plugin的集合（常用）
+
+    {
+      "presets": [
+        [
+          "@babel/preset-env", // preset-env是一堆plugin的集合（常用）
+          {
+            "useBuiltIns": "usage",
+            "corejs": 3
+          }
+        ]
+      ],
+      "plugins": [ //扩展plugin
+        [
+          "@babel/plugin-transform-runtime",
+          {
+            "absoluteRuntime": false,
+            "corejs": 3,
+            "helpers": true,
+            "regenerator": true,
+            "useESModules": false
+          }
+        ]
+      ]
+    }
+
+    
+
+
+     // ------------babel-polyfill------------
+     polyfill 补丁
+     core.js 和 regenerator [riˈdʒenəˌreɪtər]
+
+     core.js polyfill的库 不支持regenerator语法，
+     需要引入regenerator的库
+     babel-polyfill是两者的集合
+
+     babel 7.4之后弃用 balel-polyfill
+     推荐直接使用core.js 和 regenerator
+
+     babel-polyfill 如何按需引入？ ---看视频
+
+    // ------------babel-runtime------------
+    babel-polyfill会污染全局环境 --- 整理
+    如果做yi
+
+
+    
+
+  </script>
+
+</body>
+
+</html>

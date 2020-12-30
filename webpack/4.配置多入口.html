@@ -1,0 +1,68 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>webpack</title>
+</head>
+
+<body>
+
+  ## 讲解范围
+  基本配置 ***
+  -> 高级配置 ***
+  优化打包效率
+  优化产出代码
+  构建流程概述
+  babel ***
+
+
+  -------高级配置------
+  多入口   参考文件【build-multi-entry】
+
+
+
+  <script>
+    //-------多入口------
+    多入口
+    入口配置 [webpack.common.js]
+    entry: {
+      index: path.join(srcPath, 'index.js'),
+      other: path.join(srcPath, 'other.js')
+    }
+
+   出口配置 [webpack.prod.js]
+    output: {
+      // filename: 'bundle.[contentHash:8].js',  // 单入口 打包代码时，加上 hash 戳
+      filename: '[name].[contentHash:8].js', // name 即多入口时 entry 的 key
+      path: distPath,
+    },
+
+    针对每个入口分别建立插件 [webpack.common.js]
+    plugins: [
+        // 单入口时
+        // new HtmlWebpackPlugin({
+        //     template: path.join(srcPath, 'index.html'),
+        //     filename: 'index.html'
+        // })
+
+        // 多入口 - 生成 index.html
+        new HtmlWebpackPlugin({
+            template: path.join(srcPath, 'index.html'),
+            filename: 'index.html',
+            // chunks 表示该页面要引用哪些 chunk （即上面的 index 和 other），默认全部引用
+            chunks: ['index']  // 只引用 index.js
+        }),
+        // 多入口 - 生成 other.html
+        new HtmlWebpackPlugin({
+            template: path.join(srcPath, 'other.html'),
+            filename: 'other.html',
+            chunks: ['other']  // 只引用 other.js
+        })
+    ]
+  </script>
+
+</body>
+
+</html>
