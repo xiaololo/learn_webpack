@@ -78,10 +78,7 @@
         ]
       },
       plugins: [
-        new CleanWebpackPlugin(), // 会默认清空 output.path 文件夹
-        new webpack.DefinePlugin({
-          ENV: JSON.stringify('production')
-        }),
+        
         // 抽离 css 文件
         new MiniCssExtractPlugin({
           filename: 'css/main.[contentHash:8].css'

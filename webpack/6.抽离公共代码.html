@@ -21,7 +21,7 @@
   -------高级配置------
   多入口 参考文件【build-multi-entry】
   抽离CSS文件 压缩 参考文件【build-min-extract-css】
-  抽离公共代码和第三方模块  参考文件【build-min-extract-css】
+  抽离公共代码和第三方模块  参考文件【build-splitChunks】
   懒加载  
 
 
@@ -84,7 +84,7 @@
 
   // 运行npm run build后，
   // dist文件的index.html引入文件 新增了vendor.js common.js index.js
-  // other.html引入文件 新增了 common.js other.js
+  // other.html引入文件 新增了vendor.js common.js other.js
 
 
   chunk使用：

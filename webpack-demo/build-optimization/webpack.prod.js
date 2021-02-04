@@ -13,6 +13,7 @@ const HappyPack = require('happypack')
 const ParallelUglifyPlugin = require('webpack-parallel-uglify-plugin')
 const webpackCommonConf = require('./webpack.common.js')
 const {
+  
   srcPath,
   distPath
 } = require('./paths')
@@ -20,8 +21,8 @@ const {
 module.exports = smart(webpackCommonConf, {
   mode: 'production',
   output: {
-    // filename: 'bundle.[contentHash:8].js',  // 打包代码时，加上 hash 戳
-    filename: '[name].[contentHash:8].js', // name 即多入口时 entry 的 key
+    filename: 'bundle.[contentHash:8].js',  // 打包代码时，加上 hash 戳
+    // filename: '[name].[contentHash:8].js', // name 即多入口时 entry 的 key
     path: distPath,
     // publicPath: 'http://cdn.abc.com'  // 修改所有静态文件 url 的前缀（如 cdn 域名），这里暂时用不到
   },
@@ -74,7 +75,11 @@ module.exports = smart(webpackCommonConf, {
       }
     ]
   },
+  resolve:{
+    mainFields:['jsnext:main','bromser','main']
+  },
   plugins: [
+    
     new CleanWebpackPlugin(), // 会默认清空 output.path 文件夹
     new webpack.DefinePlugin({
       // window.ENV = 'production'
@@ -121,7 +126,7 @@ module.exports = smart(webpackCommonConf, {
   optimization: {
     // 压缩 css
     minimizer: [new TerserJSPlugin({}), new OptimizeCSSAssetsPlugin({})],
-
+    
     // 分割代码块
     splitChunks: {
       chunks: 'all',

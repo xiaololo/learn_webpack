@@ -22,9 +22,9 @@
   多入口 参考文件【build-multi-entry】
   抽离CSS文件 压缩 参考文件【build-min-extract-css】
   *** 抽离公共代码和第三方模块  参考文件【build-min-extract-css】
-  懒加载 
+  懒加载
   处理 JSX - 修改.babelrc "presets": ["@babel/preset-react"],
-  处理 vue 
+  处理 vue
 
   考点：
   抽离公共代码 怎么做
@@ -33,23 +33,27 @@
 
 
   <script>
-    // ------- 引入动态数据 -懒加载 ------
-    
-    import('./***/djdj.js').then(res=>{
-      console.log(res.data)
-    })
-    等同于定义一个chunk
-    
+    // ------- 引入动态数据 - 懒加载 ------
+    // abc.js 文件中定义数据
+    export default {
+      message: "this is dynamic data"
+    }
+
+    // 引入动态数据 - 懒加载
+    setTimeout(() => {
+      import('./abc.js').then(res => {
+        console.log(res.data)
+      })
+    }, 1500);
+
+    // 最后产出一个独立的js，等同于定义一个chunk
+
     // ---------处理 vue-----------
-    rules:[
-      {
-        test: /\.vue$/,
-        loader: ['vue-loader'],
-        include: srcPath
-      },
-    ]
-
-
+    rules: [{
+      test: /\.vue$/,
+      loader: ['vue-loader'],
+      include: srcPath
+    }, ]
   </script>
 
 </body>
